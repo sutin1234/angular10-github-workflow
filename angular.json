@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/angular10-github-workflow",
+            "outputPath": "dist/angular10-github-workflow/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -106,7 +106,8 @@
             "tsConfig": [
               "tsconfig.app.json",
               "tsconfig.spec.json",
-              "e2e/tsconfig.json"
+              "e2e/tsconfig.json",
+              "tsconfig.server.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -124,8 +125,59 @@
               "devServerTarget": "angular10-github-workflow:serve:production"
             }
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/angular10-github-workflow/server",
+            "main": "server.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            }
+          }
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "options": {
+            "browserTarget": "angular10-github-workflow:build",
+            "serverTarget": "angular10-github-workflow:server"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "angular10-github-workflow:build:production",
+              "serverTarget": "angular10-github-workflow:server:production"
+            }
+          }
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "browserTarget": "angular10-github-workflow:build:production",
+            "serverTarget": "angular10-github-workflow:server:production",
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {}
+          }
         }
       }
-    }},
-  "defaultProject": "angular10-github-workflow"
+    }
+  },
+  "defaultProject": "angular10-github-workflow",
+  "cli": {
+    "analytics": "717afb86-b83e-40a8-8a5d-7ad9c6329edd"
+  }
 }
